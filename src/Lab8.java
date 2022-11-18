@@ -36,18 +36,17 @@ public class Lab8 {
      * @return an array of meetings, unsorted by any criteria.
      */
     public static Meeting[] readFile(String filename) {
-        File file = new File(filename);
-        Path path = Paths.get(filename);
-        long lineCount = getLineCount(path);
+        File file          = new File(filename);
+        Path path          = Paths.get(filename);
+        long lineCount     = getLineCount(path);
         Meeting[] schedule = new Meeting[(int) lineCount / 2];
-
 
         try {
             Scanner scanner = new Scanner(file);
-            int i = 0;
+            int i           = 0;
             String customer = null;
-            String time = null;
-            int index = 0;
+            String time     = null;
+            int index       = 0;
 
             while (scanner.hasNextLine()) {
                 String next = scanner.nextLine();
@@ -80,8 +79,23 @@ public class Lab8 {
             for (int y = i + 1; y < schedule.length; y++) {
                 if (schedule[y].getStart() < schedule[i].getStart()) {
                     Meeting temp = schedule[i];
-                    schedule[i] = schedule[y];
-                    schedule[y] = temp;
+                    schedule[i]  = schedule[y];
+                    schedule[y]  = temp;
+                }
+            }
+        }
+        System.out.println(Arrays.toString(schedule));
+        return schedule;
+    }
+
+    public static Meeting[] bubbleSortArrayEndTimes(Meeting[] schedule) {
+
+        for (int i = 0; i < schedule.length; i++) {
+            for (int y = i + 1; y < schedule.length; y++) {
+                if (schedule[y].getEnd() < schedule[i].getEnd()) {
+                    Meeting temp = schedule[i];
+                    schedule[i]  = schedule[y];
+                    schedule[y]  = temp;
                 }
             }
         }
@@ -106,48 +120,21 @@ public class Lab8 {
     public static ArrayList<Meeting> rescheduleMeetingsLength(Meeting[] schedule) {
         ArrayList<Meeting> revisedSchedule = new ArrayList<>();
         revisedSchedule.add(schedule[0]); // add the first one to the list.
-        //   System.out.println("\n\n");
-        ArrayList<Meeting> scheduleList = new ArrayList<>(Arrays.asList(schedule));
-        boolean added = false;
-        int index = 0;
 
+        System.out.println("\n\n");
+        for (int i = 1; i < schedule.length; i++) { // each item in the schedule.
+            boolean conflicting = false;
 
-        for (int i = 1; i < scheduleList.size(); i++) { // each item in the schedule.
-
-            // while there is a conflict.
-            //  System.out.println("size: " + revisedSchedule.size());
-            //  System.out.println("comparing: " + revisedSchedule.get(index) + " with " + scheduleList.get(i));
-
-            while (index < revisedSchedule.size() - 1) {
-                //    System.out.println(index);
-                //     System.out.println("\tcomparing: " + revisedSchedule.get(index) + " with " + scheduleList.get(i));
-
-                if (revisedSchedule.get(index).getStart() >= scheduleList.get(i).getStart()) {
-                    //        System.out.println("index in loop: " + index );
-                    //       System.out.println(revisedSchedule);
+            for (Meeting meeting : revisedSchedule) {
+                if (meeting.overlapsWith(schedule[i])) {
+                    conflicting = true;
                     break;
                 }
-                index++;
             }
-            if (scheduleList.get(i).getStart() >= revisedSchedule.get(index).getEnd()) {
-                //       System.out.println("here");
-            } else {
-                //      System.out.println("here");
-
-                if (scheduleList.get(i).getStart() < revisedSchedule.get(index).getEnd() &&
-                        !scheduleList.get(i).overlapsWith(revisedSchedule.get(index))) {
-                    revisedSchedule.add(index, scheduleList.get(i));
-                } else {
-
-                    //revisedSchedule.add(scheduleList.get(i));
-                }
+            if(!conflicting){
+                revisedSchedule.add(schedule[i]);
             }
-            index = 0;
-            //    System.out.println(revisedSchedule);
-
         }
-
-
         return revisedSchedule;
     }
 
@@ -156,6 +143,27 @@ public class Lab8 {
 
         Meeting[] sortedSchedule = bubbleSortArray(schedule);
         return rescheduleMeetingsTime(sortedSchedule);
+    }
+
+
+    public static ArrayList<Meeting> rankByEndTime(Meeting[] schedule){
+        Meeting[] sortedSchedule = bubbleSortArrayEndTimes(schedule);
+        return rescheduleMeetingsEndTime(sortedSchedule);
+
+    }
+
+    public static ArrayList<Meeting> rescheduleMeetingsEndTime(Meeting[] schedule){
+        ArrayList<Meeting> revisedSchedule = new ArrayList<>();
+        revisedSchedule.add(schedule[0]); // add the first one to the list.
+
+        int index = 0;
+        for (int y = 0; y < schedule.length - 1; y++) {
+            if (!schedule[y + 1].overlapsWith(revisedSchedule.get(index))) {
+                revisedSchedule.add(schedule[y + 1]);
+                index++;
+            }
+        }
+        return revisedSchedule;
     }
 
     public static ArrayList<Meeting> rankByLength(Meeting[] schedule) {
@@ -208,9 +216,11 @@ public class Lab8 {
         ArrayList<Meeting> meetingsL3;
         ArrayList<Meeting> meetingsL4;
 
-        ArrayList<Meeting> meetings7;
-        ArrayList<Meeting> meetings8;
-        ArrayList<Meeting> meetings9;
+        ArrayList<Meeting> meetingsT7;
+        ArrayList<Meeting> meetingsT8;
+        ArrayList<Meeting> meetingsT9;
+        ArrayList<Meeting> meetingsT10;
+
 
 //        Meeting[] scheduleS1  = readFile("data1.txt");
 //        Meeting[] scheduleS2 = readFile("data2.txt");
@@ -239,35 +249,59 @@ public class Lab8 {
 //        System.out.println(meetingsS4);
 //        System.out.println(meetingsS4.size());
 
+//
+//        Meeting[] scheduleL1 = readFile("data1.txt");
+//        Meeting[] scheduleL2 = readFile("data2.txt");
+//        Meeting[] scheduleL3 = readFile("data3.txt");
+//        Meeting[] scheduleL4 = readFile("data4.txt");
+//
+//        meetingsL1 = rankByLength(scheduleL1);
+//        meetingsL2 = rankByLength(scheduleL2);
+//        meetingsL3 = rankByLength(scheduleL3);
+//        meetingsL4 = rankByLength(scheduleL4);
+//
+//        System.out.println("\n\n");
+//
+//        System.out.println("Data 1 By LENGTH-----");
+//        System.out.println(meetingsL1);
+//        System.out.println(meetingsL1.size());
+//        System.out.println("Data 2 By LENGTH-----");
+//        System.out.println(meetingsL2);
+//        System.out.println(meetingsL2.size());
+//
+//        System.out.println("Data 3 By LENGTH-----");
+//        System.out.println(meetingsL3);
+//        System.out.println(meetingsL3.size());
+//
+//        System.out.println("Data 4 By LENGTH-----");
+//        System.out.println(meetingsL4);
+//        System.out.println(meetingsL4.size());
 
-        Meeting[] scheduleL1 = readFile("data1.txt");
-        Meeting[] scheduleL2 = readFile("data2.txt");
-        Meeting[] scheduleL3 = readFile("data3.txt");
-        Meeting[] scheduleL4 = readFile("data4.txt");
+        Meeting[] scheduleTE1 = readFile("data1.txt");
+        Meeting[] scheduleTE2 = readFile("data2.txt");
+        Meeting[] scheduleTE3 = readFile("data3.txt");
+        Meeting[] scheduleTE4 = readFile("data4.txt");
 
+        meetingsT7 = rankByEndTime(scheduleTE1);
+        meetingsT8 = rankByEndTime(scheduleTE2);
+        meetingsT9 = rankByEndTime(scheduleTE3);
+        meetingsT10 = rankByEndTime(scheduleTE4);
 
-        meetingsL1 = rankByLength(scheduleL1);
-        meetingsL2 = rankByLength(scheduleL2);
-        meetingsL3 = rankByLength(scheduleL3);
-        meetingsL4 = rankByLength(scheduleL4);
-
-        System.out.println("\n\n");
 
         System.out.println("Data 1 By LENGTH-----");
-        System.out.println(meetingsL1);
-        System.out.println(meetingsL1.size());
+        System.out.println(meetingsT7);
+        System.out.println(meetingsT7.size());
         System.out.println("Data 2 By LENGTH-----");
-        System.out.println(meetingsL2);
-        System.out.println(meetingsL2.size());
+        System.out.println(meetingsT8);
+        System.out.println(meetingsT8.size());
 
         System.out.println("Data 3 By LENGTH-----");
-        System.out.println(meetingsL3);
-        System.out.println(meetingsL3.size());
+        System.out.println(meetingsT9);
+        System.out.println(meetingsT9.size());
 
         System.out.println("Data 4 By LENGTH-----");
-        System.out.println(meetingsL4);
-        System.out.println(meetingsL4.size());
-
+        System.out.println(meetingsT10);
+        System.out.println(meetingsT10.size());
 
     }
 }

@@ -20,11 +20,11 @@ import java.util.stream.Stream;
  * the best meeting lengths(the shortest length is the best) and one for the best end times (the earlier
  * end is the best). Here they are added back to an array list and returned as a rescheduled meeting list.
  *
- * @lab: Greedy Algorithms
- * @name: Bradley Masciotra
+ * @lab:            Greedy Algorithms
+ * @name:           Bradley Masciotra
  * @student_number: A01247718
- * @date: November 19th 2022
- * @version: 1.0
+ * @date:           November 19th 2022
+ * @version:        1.0
  */
 public class Lab8 {
 
@@ -164,13 +164,6 @@ public class Lab8 {
             }
         }
 
-//        int index = 0;
-//        for (int y = 0; y < schedule.length - 1; y++) {
-//            if (schedule[y + 1].overlapsWith(revisedSchedule.get(index))) {
-//                revisedSchedule.add(schedule[y + 1]);
-//                index++;
-//            }
-//        }
         return revisedSchedule;
     }
 
@@ -380,7 +373,6 @@ public class Lab8 {
         meetingsT8 = rankByEndTime(scheduleTE2);
         meetingsT9 = rankByEndTime(scheduleTE3);
         meetingsT10 = rankByEndTime(scheduleTE4);
-
 
         System.out.println("Data 1 By END-----");
         System.out.println(meetingsT7);
